@@ -1,0 +1,28 @@
+<VirtualHost *:<%= @params[:port] %>>
+  ServerName <%= @params[:server_name] %>
+  <% if @params[:server_aliases] -%>
+  ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+  <% end %>
+  <% if @params[:server_admin] -%>
+  ServerAdmin <%= @params[:server_admin] %>
+  <% end %>
+  DocumentRoot <%= @params[:docroot] %>
+
+  <% (@params[:directories] || []).each do |dir| %>
+<%= render "_directory.conf.erb", :variables => { :config => dir } %>
+  <% end %>
+  LogLevel <%= @params[:log_level] %>
+  ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
+  CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-access.log combined
+  <% if @params[:directory_index] -%>
+  DirectoryIndex <%= [@params[:directory_index]].flatten.join " " %>
+  <% end -%>
+  <% if @params[:php_flags] -%>
+  <IFModule php5_module>
+    <% @params[:php_flags].each do |key, value| -%>
+    php_flag <%= key %> <%= value %>
+    <% end %>
+  </IFModule>
+  <% end %>
+  ServerSignature <%= @params[:server_signature] %>
+</VirtualHost>

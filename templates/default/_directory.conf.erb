@@ -1,0 +1,28 @@
+  <Directory <%= @config['path'] %>>
+    <% if @config[:options] %>
+    Options <%= [@config[:options]].flatten.join(" ") %>
+    <% end %>
+    <% if @config[:allow_override] %>
+    AllowOverride <%= [@config[:allow_override]].flatten.join(" ") %>
+    <% end %>
+    <% if @config[:order] %>
+    Order <%= [@config[:order]].flatten.join(",") %>
+    <% end %>
+    <% if @config[:allow] %>
+    Allow from <%= [@config[:allow]].flatten.join(" ") %>
+    <% end %>
+    <% if @config[:deny] %>
+    Deny from <%= [@config[:deny]].flatten.join(" ") %>
+    <% end %>
+    <% if @config[:expires_active] %>
+    ExpiresActive <%= @config[:expires_active] %>
+    <% end %>
+    <% if @config[:expires_default] -%>
+    ExpiresDefault "<%= @config[:expires_default] %>"
+    <% end %>
+    <% (@config[:files_match] || {}).each do |regex, configs| %>
+    <FilesMatch "<%= regex %>">
+      <%= render "_directory", :locals => { configs => configs } %>
+    </FilesMatch>
+    <% end %>
+  </Directory>
