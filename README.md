@@ -1,6 +1,8 @@
 apache_vhosts
 =============
 
+* version 0.1.0
+
 Chef cookbook setting up apache virtual hosts basing on the attributes. Can be used for setting up simple virtual hosts without writing additional cookbooks.
 
 Requires
